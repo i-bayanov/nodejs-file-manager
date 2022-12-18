@@ -41,5 +41,7 @@ rl.on('line', (line) => {
     if (error instanceof Error) {
       console.log(error.message);
     }
+  } finally {
+    jsModulesBound.promptUser();
   }
 }).on('SIGINT', jsModulesBound.exit.bind(null, userName));
