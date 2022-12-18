@@ -25,7 +25,9 @@ const rl = readline.createInterface({
 
 rl.on('line', (line) => {
   try {
-    const [command, ...args] = line.split(' ');
+    const indexOfSpace = line.indexOf(' ');
+    const command = line.slice(0, indexOfSpace);
+    const args = jsModulesBound.parseArgs(line.slice(indexOfSpace + 1));
 
     if (command === '.exit') jsModulesBound.exit(userName);
 
