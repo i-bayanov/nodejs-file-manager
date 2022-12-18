@@ -23,11 +23,14 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-rl.on('line', (line) => {
+rl.on('line', async (line) => {
   try {
     const indexOfSpace = line.indexOf(' ');
-    const command = line.slice(0, indexOfSpace);
-    const args = jsModulesBound.parseArgs(line.slice(indexOfSpace + 1));
+    const command = indexOfSpace === -1 ? line : line.slice(0, indexOfSpace);
+    const args =
+      indexOfSpace === -1
+        ? []
+        : jsModulesBound.parseArgs(line.slice(indexOfSpace + 1));
 
     if (command === '.exit') jsModulesBound.exit(userName);
 
@@ -38,7 +41,7 @@ rl.on('line', (line) => {
       return;
     }
 
-    fn(...args);
+    await fn(...args);
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
