@@ -1,12 +1,26 @@
+import fsPromises from 'fs/promises';
 import path from 'path';
 
-import { checkPathExistence } from './checkPathExistence.js';
-
 export async function cd(pathToDirectory) {
-  const newDirectory = path.resolve(this.cwd, pathToDirectory);
+  if (!pathToDirectory) throw new Error('Invalid input');
 
-  if (!(await checkPathExistence(newDirectory)))
+  const newPath = path.resolve(this.cwd, pathToDirectory);
+
+  try {
+    const isDirectory = (await fsPromises.stat(newPath)).isDirectory();
+
+    if (!isDirectory) throw new Error('Path is not a directory');
+
+    this.cwd = newPath;
+  } catch (error) {
+    if (error instanceof Error) {
+      const isInputInvalid =
+        error.message.startsWith('ENOENT: no such file or directory') ||
+        error.message === 'Path is not a directory';
+
+      if (isInputInvalid) throw new Error('Invalid input');
+    }
+
     throw new Error('Operation failed');
-
-  this.cwd = newDirectory;
+  }
 }
