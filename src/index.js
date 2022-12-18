@@ -40,7 +40,6 @@ rl.on('line', (line) => {
   } catch (error) {
     if (error instanceof Error) {
       console.log(error.message);
-      return;
     }
   }
 }).on('SIGINT', jsModulesBound.exit.bind(null, userName));
