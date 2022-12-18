@@ -3,3 +3,4 @@ export { promptUser } from './promptUser.js';
 export { up } from './up.js';
 export { parseArgs } from './parseArgs.js';
 export { cd } from './cd.js';
+export { ls } from './ls.js';
