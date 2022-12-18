@@ -36,10 +36,7 @@ rl.on('line', async (line) => {
 
     const fn = jsModulesBound[command];
 
-    if (!fn) {
-      console.log(`Unknown command "${command}"`);
-      return;
-    }
+    if (!fn) throw new Error('Invalid input');
 
     await fn(...args);
   } catch (error) {
