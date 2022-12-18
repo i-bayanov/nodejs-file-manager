@@ -9,8 +9,14 @@ const userName =
     .find((arg) => arg.startsWith('--username='))
     ?.replace('--username=', '') || 'Anonche';
 
+const ctx = { cwd: homedir() };
+
+const jsModulesBound = Object.fromEntries(
+  Object.entries(jsModules).map(([fnName, fn]) => [fnName, fn.bind(ctx)])
+);
+
 console.log(`Welcome to the File Manager, ${userName}!`);
-console.log(`You are currently in ${homedir}`);
+jsModulesBound.promptUser();
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -18,16 +24,23 @@ const rl = readline.createInterface({
 });
 
 rl.on('line', (line) => {
-  const [command, ...args] = line.split(' ');
+  try {
+    const [command, ...args] = line.split(' ');
 
-  if (command === '.exit') jsModules.exit(userName);
+    if (command === '.exit') jsModulesBound.exit(userName);
 
-  const fn = jsModules[command];
+    const fn = jsModulesBound[command];
 
-  if (!fn) {
-    console.log(`Unknown command "${command}"`);
-    return;
+    if (!fn) {
+      console.log(`Unknown command "${command}"`);
+      return;
+    }
+
+    fn(...args);
+  } catch (error) {
+    if (error instanceof Error) {
+      console.log(error.message);
+      return;
+    }
   }
-
-  fn(...args);
-}).on('SIGINT', jsModules.exit.bind(null, userName));
+}).on('SIGINT', jsModulesBound.exit.bind(null, userName));
