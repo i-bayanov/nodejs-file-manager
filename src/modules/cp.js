@@ -1,3 +1,4 @@
+import { mkdir } from 'fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { resolve, basename } from 'path';
 
@@ -6,13 +7,21 @@ import { checkPathExistence } from './checkPathExistence.js';
 export async function cp(pathToFile, pathToNewDirectory) {
   const absolutePathToFile = resolve(this.cwd, pathToFile);
   const fileName = basename(absolutePathToFile);
-  const absolutePathToNewFile = resolve(this.cwd, pathToNewDirectory, fileName);
+  const absolutePathToNewDir = resolve(this.cwd, pathToNewDirectory);
+  const absolutePathToNewFile = resolve(absolutePathToNewDir, fileName);
   const isFileAlreadyExists = await checkPathExistence(absolutePathToNewFile);
 
   if (!pathToFile || !pathToNewDirectory || isFileAlreadyExists)
     throw new Error('Invalid input');
 
   try {
+    const isDestinationDirExists = await checkPathExistence(
+      absolutePathToNewDir
+    );
+
+    if (!isDestinationDirExists)
+      await mkdir(absolutePathToNewDir, { recursive: true });
+
     await new Promise((resolve, reject) => {
       const readStream = createReadStream(absolutePathToFile);
       readStream
@@ -22,6 +31,7 @@ export async function cp(pathToFile, pathToNewDirectory) {
       writeStream
         .on('error', (error) => reject(error))
         .on('close', () => resolve());
+      readStream.pipe(writeStream);
     });
   } catch (error) {
     if (error instanceof Error) {
