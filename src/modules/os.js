@@ -1,8 +1,6 @@
 import osInfo from 'os';
 
-export function os(arg, ...args) {
-  if (args.length) throw new Error('Invalid input');
-
+export function os(arg) {
   switch (arg) {
     case '--EOL':
       console.log(JSON.stringify(osInfo.EOL));
