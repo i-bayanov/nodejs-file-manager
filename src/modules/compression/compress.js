@@ -4,7 +4,7 @@ import { resolve, basename } from 'path';
 import { createBrotliCompress } from 'zlib';
 import { pipeline } from 'stream/promises';
 
-import { checkPathExistence } from './checkPathExistence.js';
+import { checkPathExistence } from '../misc/checkPathExistence.js';
 
 export async function compress(pathToFile, pathToDestination) {
   if (!pathToFile || !pathToDestination) throw new Error('Invalid input');

@@ -2,7 +2,7 @@ import { mkdir } from 'fs/promises';
 import { createReadStream, createWriteStream } from 'fs';
 import { resolve, basename } from 'path';
 
-import { checkPathExistence } from './checkPathExistence.js';
+import { checkPathExistence } from '../misc/checkPathExistence.js';
 
 export async function cp(pathToFile, pathToNewDirectory) {
   const absolutePathToFile = resolve(this.cwd, pathToFile);

@@ -1,7 +1,7 @@
 import { rename, stat } from 'fs/promises';
 import { resolve, dirname } from 'path';
 
-import { checkPathExistence } from './checkPathExistence.js';
+import { checkPathExistence } from '../misc/checkPathExistence.js';
 
 export async function rn(pathToFile, newFileName) {
   if (!pathToFile || !newFileName) throw new Error('Invalid input');

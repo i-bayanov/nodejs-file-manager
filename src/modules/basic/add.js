@@ -1,7 +1,7 @@
 import { writeFile } from 'fs/promises';
 import { resolve } from 'path';
 
-import { checkPathExistence } from './checkPathExistence.js';
+import { checkPathExistence } from '../misc/checkPathExistence.js';
 
 export async function add(newFileName) {
   if (!newFileName) throw new Error('Invalid input');
