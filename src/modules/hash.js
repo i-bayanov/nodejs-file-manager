@@ -3,9 +3,10 @@ import path from 'path';
 import crypto from 'crypto';
 
 export async function hash(pathToFile) {
-  const absolutePathToFile = path.resolve(this.cwd, pathToFile);
+  if (!pathToFile) throw new Error('Invalid input');
 
   try {
+    const absolutePathToFile = path.resolve(this.cwd, pathToFile);
     const fileData = await fsPromises.readFile(absolutePathToFile);
     const hash = crypto.createHash('sha256').update(fileData).digest('hex');
 
