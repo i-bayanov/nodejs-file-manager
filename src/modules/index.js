@@ -8,3 +8,4 @@ export { os } from './os.js';
 export { hash } from './hash.js';
 export { compress } from './compress.js';
 export { decompress } from './decompress.js';
+export { cat } from './cat.js';
