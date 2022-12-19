@@ -1,13 +1,23 @@
-import fsPromises from 'fs/promises';
+import { createReadStream } from 'fs';
 import path from 'path';
+import { EOL } from 'os';
 
 export async function cat(pathToFile) {
   if (!pathToFile) throw new Error('Invalid input');
 
   try {
     const absolutePathToFile = path.resolve(this.cwd, pathToFile);
-    const fileContent = await fsPromises.readFile(absolutePathToFile, 'utf8');
-    console.log(fileContent);
+
+    await new Promise((resolve, reject) => {
+      const readStream = createReadStream(absolutePathToFile);
+      readStream
+        .on('error', (error) => reject(error))
+        .on('end', () => process.stdout.write(EOL))
+        .on('close', () => resolve());
+      readStream.pipe(process.stdout);
+    }).catch((error) => {
+      throw error;
+    });
   } catch (error) {
     if (error instanceof Error) {
       const isInputInvalid =
